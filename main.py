@@ -1,7 +1,8 @@
 import random
 import string
 
-isDone = 0
+# password gen vars
+gen_or_see = 0 # 0 for gen, 1 for see
 passLength = 1
 letters = string.ascii_letters
 numbers = string.digits
@@ -33,6 +34,7 @@ def special(specialChar):
 def final(lettersChar, numberChar, passLength, specialChar):
     if lettersChar == "y" and numberChar == "y":
         if specialChar == "y":
+            global password
             printable = f"{letters}{numbers}{punctuation}"
             printable = list(printable)
             random.shuffle(printable)
@@ -40,6 +42,7 @@ def final(lettersChar, numberChar, passLength, specialChar):
             password = " ".join(password)
             password = password.replace(" ", "")
             print(password)
+
         else:
             printable = f"{letters}{numbers}"
             printable = list(printable)
@@ -100,9 +103,14 @@ def final(lettersChar, numberChar, passLength, specialChar):
         else:
             print("What are you using it for then?")
 
+pogInput = input("Would you like to generate or find password? gen/see")
+if pogInput == "gen":
+    gen_or_see = 0
+else:
+    gen_or_see = 1
 
 # take input
-while isDone == 0:
+while gen_or_see == 0:
     passLength = int(input("How long would you like the password to be? 1-99 "))
     if passLength >= 100:
         print("Please pick a number between 1 and 99.")
@@ -119,3 +127,12 @@ while isDone == 0:
         continue
     if final(lettersChar, numberChar, passLength,specialChar):
         print(final)
+        password = final
+    username = str(input("What is the username associated with this password? "))
+    f = open("passwords.txt", "a")
+    f.write(f"{username}:{password}\n")
+    f.close()
+
+while gen_or_see == 1:
+    username = str(input("What is the username of the password you are trying to find?"))
+# close connect
