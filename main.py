@@ -1,71 +1,92 @@
 import random
 import string
+
 isDone = 0
 passLength = 1
 letters = string.ascii_letters
 numbers = string.digits
 punctuation = string.punctuation
 
-def special(specialChar):
-    if(specialChar) == "y":
-        specialChar = "y"
-    else:
-        specialChar = "n"
-
 # check if letters
 def letter(lettersChar):
     if lettersChar == "y":
-        lettersChar = "y"
+        return
     else:
         lettersChar = "n"
+
 
 # check if numbers
 def number(numberChar):
     if numberChar == "y":
-        numberChar = "y"
+        return
     else:
-         numberChar = "n"
+        numberChar = "n"
 
 # check if special
-#string.punctuation
+def special(specialChar):
+    if (specialChar) == "y":
+        return
+    else:
+        specialChar = "n"
 
 # check final generator args
-def final(lettersChar, numberChar, specialChar, passLength):
+def final(lettersChar, numberChar, passLength, specialChar):
     if lettersChar == "y" and numberChar == "y":
-        printable = f"{letters}{numbers}"
-        printable = list(printable)
-        random.shuffle(printable)
-        password = random.choices(printable, k=passLength)
-        password = " ".join(password)
-        password = password.replace(" ","")
-        print(password)
+        if specialChar == "y":
+            printable = f"{letters}{numbers}{punctuation}"
+            printable = list(printable)
+            random.shuffle(printable)
+            password = random.choices(printable, k=passLength)
+            password = " ".join(password)
+            password = password.replace(" ", "")
+            print(password)
+        else:
+            printable = f"{letters}{numbers}"
+            printable = list(printable)
+            random.shuffle(printable)
+            password = random.choices(printable, k=passLength)
+            password = " ".join(password)
+            password = password.replace(" ", "")
+            print(password)
         return False
     if lettersChar == "y" and numberChar == "n":
-        printable = f"{letters}"
-        printable = list(printable)
-        random.shuffle(printable)
-        password = random.choices(printable, k=passLength)
-        password = " ".join(password)
-        password = password.replace(" ","")
-        print(password)
+        if specialChar == "y":
+            printable = f"{letters}{punctuation}"
+            printable = list(printable)
+            random.shuffle(printable)
+            password = random.choices(printable, k=passLength)
+            password = " ".join(password)
+            password = password.replace(" ", "")
+            print(password)
+        else:
+            printable = f"{letters}"
+            printable = list(printable)
+            random.shuffle(printable)
+            password = random.choices(printable, k=passLength)
+            password = " ".join(password)
+            password = password.replace(" ", "")
+            print(password)
         return False
+
     if lettersChar == "n" and numberChar == "y":
         printable = f"{numbers}"
         printable = list(printable)
         random.shuffle(printable)
         password = random.choices(printable, k=passLength)
         password = " ".join(password)
-        password = password.replace(" ","")
+        password = password.replace(" ", "")
         print(password)
         return False
     else:
         print("Why are you using it then..?")
+
 
 def anotherPass(anotherPassword):
     if anotherPassword == "y":
         isDone = 1
     else:
         isDone = 0
+
 
 # take input
 while isDone == 0:
@@ -80,13 +101,13 @@ while isDone == 0:
     numberChar = str(input("Would you like numbers? y/n "))
     if number(numberChar):
         continue
-
-    if final(lettersChar, numberChar, passLength):
+    specialChar = str(input("Would you like punctation? y/n "))
+    if special(specialChar):
+        continue
+    if final(lettersChar, numberChar, passLength,specialChar):
         print(final)
     anotherPassword = str(input("Would you like to generator another password? y/n "))
     if anotherPass(anotherPassword):
-        continue
+        isDone = 0
     else:
-        break
-
-
+        isDone = 1
