@@ -1,11 +1,16 @@
 import random
 import string
-letterNum = random.randrange(0,27)
 isDone = 0
+passLength = 1
+letters = string.ascii_letters
+numbers = string.digits
+punctuation = string.punctuation
 
-#def special(specialChar):
-#    if(specialChar) == True:
-
+def special(specialChar):
+    if(specialChar) == "y":
+        specialChar = "y"
+    else:
+        specialChar = "n"
 
 # check if letters
 def letter(lettersChar):
@@ -25,34 +30,49 @@ def number(numberChar):
 #string.punctuation
 
 # check final generator args
-def final(lettersChar, numberChar):
+def final(lettersChar, numberChar, specialChar, passLength):
     if lettersChar == "y" and numberChar == "y":
-        print(f"{random.randint(0,9)}{random.randint(0,9)}{random.randint(0,9)}{random.randint(0,9)}"
-              f"{random.choice(string.ascii_letters)}{random.choice(string.ascii_letters)}"
-              f"{random.choice(string.ascii_letters)}{random.choice(string.ascii_letters)}"
-              f"{random.randint(0, 9)}{random.randint(0, 9)}{random.randint(0, 9)}{random.randint(0, 9)}"
-              f"{random.choice(string.ascii_letters)}{random.choice(string.ascii_letters)}"
-              f"{random.choice(string.ascii_letters)}{random.choice(string.ascii_letters)}")
+        printable = f"{letters}{numbers}"
+        printable = list(printable)
+        random.shuffle(printable)
+        password = random.choices(printable, k=passLength)
+        password = " ".join(password)
+        password = password.replace(" ","")
+        print(password)
         return False
     if lettersChar == "y" and numberChar == "n":
-        print(f"{random.choice(string.ascii_letters)}{random.choice(string.ascii_letters)}"
-              f"{random.choice(string.ascii_letters)}{random.choice(string.ascii_letters)}"
-              f"{random.choice(string.ascii_letters)}{random.choice(string.ascii_letters)}"
-              f"{random.choice(string.ascii_letters)}{random.choice(string.ascii_letters)}"
-              f"{random.choice(string.ascii_letters)}{random.choice(string.ascii_letters)}"
-              f"{random.choice(string.ascii_letters)}{random.choice(string.ascii_letters)}")
+        printable = f"{letters}"
+        printable = list(printable)
+        random.shuffle(printable)
+        password = random.choices(printable, k=passLength)
+        password = " ".join(password)
+        password = password.replace(" ","")
+        print(password)
         return False
     if lettersChar == "n" and numberChar == "y":
-        print(f"{random.randint(0,9)}{random.randint(0,9)}{random.randint(0,9)}{random.randint(0,9)}"
-              f"{random.randint(0,9)}{random.randint(0,9)}{random.randint(0,9)}{random.randint(0,9)}"
-              f"{random.randint(0,9)}{random.randint(0,9)}{random.randint(0,9)}{random.randint(0,9)}")
+        printable = f"{numbers}"
+        printable = list(printable)
+        random.shuffle(printable)
+        password = random.choices(printable, k=passLength)
+        password = " ".join(password)
+        password = password.replace(" ","")
+        print(password)
         return False
     else:
         print("Why are you using it then..?")
 
+def anotherPass(anotherPassword):
+    if anotherPassword == "y":
+        isDone = 1
+    else:
+        isDone = 0
+
 # take input
 while isDone == 0:
-
+    passLength = int(input("How long would you like the password to be? 1-99 "))
+    if passLength >= 100:
+        print("Please pick a number between 1 and 99.")
+        continue
     lettersChar = str(input("Would you like letters? y/n "))
     if letter(lettersChar):
         continue
@@ -61,7 +81,12 @@ while isDone == 0:
     if number(numberChar):
         continue
 
-    if final(lettersChar, numberChar):
+    if final(lettersChar, numberChar, passLength):
         print(final)
+    anotherPassword = str(input("Would you like to generator another password? y/n "))
+    if anotherPass(anotherPassword):
+        continue
+    else:
+        break
 
-    isDone = 1
+
