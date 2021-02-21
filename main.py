@@ -69,23 +69,36 @@ def final(lettersChar, numberChar, passLength, specialChar):
         return False
 
     if lettersChar == "n" and numberChar == "y":
-        printable = f"{numbers}"
-        printable = list(printable)
-        random.shuffle(printable)
-        password = random.choices(printable, k=passLength)
-        password = " ".join(password)
-        password = password.replace(" ", "")
-        print(password)
-        return False
-    else:
-        print("Why are you using it then..?")
-
-
-def anotherPass(anotherPassword):
-    if anotherPassword == "y":
-        isDone = 1
-    else:
-        isDone = 0
+        if specialChar == "y":
+            printable = f"{numbers}{punctuation}"
+            printable = list(printable)
+            random.shuffle(printable)
+            password = random.choices(printable, k=passLength)
+            password = " ".join(password)
+            password = password.replace(" ", "")
+            print(password)
+            return False
+        else:
+            printable = f"{numbers}"
+            printable = list(printable)
+            random.shuffle(printable)
+            password = random.choices(printable, k=passLength)
+            password = " ".join(password)
+            password = password.replace(" ", "")
+            print(password)
+            return False
+    if lettersChar == "n" and numberChar == "n":
+        if specialChar == "y":
+            printable = f"{punctuation}"
+            printable = list(printable)
+            random.shuffle(printable)
+            password = random.choices(printable, k=passLength)
+            password = " ".join(password)
+            password = password.replace(" ", "")
+            print(password)
+            return False
+        else:
+            print("What are you using it for then?")
 
 
 # take input
@@ -106,8 +119,3 @@ while isDone == 0:
         continue
     if final(lettersChar, numberChar, passLength,specialChar):
         print(final)
-    anotherPassword = str(input("Would you like to generator another password? y/n "))
-    if anotherPass(anotherPassword):
-        isDone = 0
-    else:
-        isDone = 1
