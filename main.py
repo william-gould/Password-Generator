@@ -1,6 +1,17 @@
 import random
 import string
 from cryptography.fernet import Fernet
+import os.path
+
+
+def write_key():
+    """
+    Generates a key and save it into a file
+    """
+    key = Fernet.generate_key()
+    with open("pass.key", "wb") as key_file:
+        key_file.write(key)
+
 
 # password gen vars
 gen_or_see = 2  # 0 for gen, 1 for see
@@ -8,7 +19,7 @@ passLength = 1
 letters = string.ascii_letters
 numbers = string.digits
 punctuation = string.punctuation
-found = "n"
+
 
 # check if letters
 def letter(lettersChar):
@@ -119,48 +130,63 @@ def pogInput(gensee):
 # take input
 
 while gen_or_see == 2:
-    gensee = str(input("Would you like to access the (gen)erator or password (view)er "))
-    if gensee == "gen":
-        passLength = int(input("How long would you like the password to be? 1-99 "))
-        if passLength >= 100:
-            print("Please pick a number between 1 and 99.")
-            continue
-        lettersChar = str(input("Would you like letters? y/n "))
-        if letter(lettersChar):
-            continue
-
-        numberChar = str(input("Would you like numbers? y/n "))
-        if number(numberChar):
-            continue
-        specialChar = str(input("Would you like punctation? y/n "))
-        if special(specialChar):
-            continue
-        if final(lettersChar, numberChar, passLength, specialChar):
-            print(final)
-            password = final
-        username = str(input("What is the username associated with this password? "))
-        f = open("passwords.txt", "a")
-        f.write(f"{username}:{password}\n")
-        f.close()
-    elif gensee == "view":
-        viewPass = str(input("Enter your pin. "))
-        if viewPass == "1234":
-            username = str(input("What is the username of the password you are trying to find? "))
-            f = open("passwords.txt", "r")
-            for line in f:
-                if f"{username}" in line:
-                    print(line)
-                    found = "y"
-                else:
-                    continue
-            if found == "y":
+    if os.path.exists("pin.txt"):
+        pinFile = open("pin.txt", "r")
+        gensee = str(input("Would you like to access the (gen)erator, password (view)er, or (reset) pin? "))
+        if gensee == "gen":
+            passLength = int(input("How long would you like the password to be? 1-99 "))
+            if passLength >= 100:
+                print("Please pick a number between 1 and 99.")
                 continue
-            elif found == "n":
-                print("Username not found.")
-        elif viewPass != "1234":
-            print("Incorrect Password")
-            exit
+            lettersChar = str(input("Would you like letters? y/n "))
+            if letter(lettersChar):
+                continue
+
+            numberChar = str(input("Would you like numbers? y/n "))
+            if number(numberChar):
+                continue
+            specialChar = str(input("Would you like punctuation? y/n "))
+            if special(specialChar):
+                continue
+            if final(lettersChar, numberChar, passLength, specialChar):
+                print(final)
+                password = final
+            username = str(input("What is the username associated with this password? "))
+            f = open("passwords.txt", "a")
+            f.write(f"{username}:{password}\n")
+            f.close()
+        elif gensee == "view":
+            viewPass = str(input("Enter your pin. "))
+            if viewPass == pinFile.read():
+                username = str(input("What is the username of the password you are trying to find? "))
+                f = open("passwords.txt", "r")
+                for line in f:
+                    if f"{username}" in line:
+                        print(line)
+                        found = "y"
+                    else:
+                        continue
+                if found == "y":
+                    continue
+                elif found == "n":
+                    print("Username not found.")
+            elif viewPass != "1234":
+                print("Incorrect Password")
+                break
+        elif gensee == "reset":
+            viewPass = str(input("Enter your pin. "))
+            if viewPass == pinFile.read():
+                pinFile = open("pin.txt", "w")
+                resetPin = str(input("Please choose a pin! "))
+                pinFile.write(resetPin)
+            else:
+                print("Incorrect Password")
+                break
         else:
             print("Unknown request. Try again.")
             continue
+    else:
+        pinFile = open("pin.txt", "w")
+        newPin = str(input("Please choose a pin! "))
+        pinFile.write(newPin)
 # end of code
